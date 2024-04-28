@@ -1,0 +1,12 @@
+[
+    {
+        "base_url": "http://127.0.0.1:11434/v1",
+        "api_key": "ollama",
+        "model": "codellama:latest"
+    },
+    {
+        "base_url": "http://127.0.0.1:11434/v1",
+        "api_key": "ollama",
+        "model": "llama3:latest"
+    }
+]
