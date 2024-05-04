@@ -13,11 +13,5 @@ chat_manager = ChatManagerBuilder(
         coder.code_writer_agent,
         reviewer.code_reviewer_agent,
     ],
-    "llama3",
-    {
-        user.user_proxy_agent: [embedder.embedding_agent, user.user_proxy_agent],
-        embedder.embedding_agent: [coder.code_writer_agent,user.user_proxy_agent],
-        coder.code_writer_agent: [embedder.embedding_agent, user.user_proxy_agent],
-        reviewer.code_reviewer_agent: [coder.code_writer_agent, user.user_proxy_agent],
-    },
+    "llama3"
 ).build_chat_manager()

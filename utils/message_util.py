@@ -35,3 +35,4 @@ def load_text_file(relative_path):
     _TEXT_CACHE[file_path] = text_content
 
     return text_content
+

@@ -2,14 +2,19 @@
 from agents.user_proxy_agent import user_proxy_agent as user
 from managers.task_manager import TaskManager
 from managers.chat_manager import chat_manager
+from utils import chat_util
+from constants import EMBED
+from preprocessors import code_to_doc as codoc
 
+print("================================================================")
 
-result = user.initiate_chat(
-    chat_manager,
-    message=TaskManager(
-        """Access the repository url https://gitlab.com/gitlab-org/gitlab-ui. 
-        It does not required username or password.
-        Give me vue js code by using gl-breadcrumb component where my items prop is 
+codoc.generate_markdown(EMBED.CONSTANTS.EMBED_CONTEXT_PATH)
+
+result =chat_util.init(user, 
+    agents=chat_manager,
+    task=TaskManager(
+        """
+        Give me vue.js code by using gl-breadcrumb component where my items prop is 
         [
             {
                 "text": "First item",
@@ -34,6 +39,9 @@ result = user.initiate_chat(
         ]
                         """
     ).get_task(),
-    summary_method="reflection_with_llm"
+    is_rag=True,
+    search="gl-breadcrumb"
 )
-print(result.summary)
+
+print("================================================================")
+print(result)

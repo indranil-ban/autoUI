@@ -2,6 +2,7 @@ import autogen  # type: ignore
 import json
 from os import path
 from abstractions.chat_manager_abstractions import BaseChatManager
+from constants import CHAT
 
 
 class ChatManagerBuilder(BaseChatManager):
@@ -11,13 +12,11 @@ class ChatManagerBuilder(BaseChatManager):
         agents,
         llm_json_file,
         # system_message,
-        allowed_transitions,
     ) -> None:
         super().__init__()
         self._agents = agents
         self._llm_json = self.get_llm(llm_json_file)
         # self._system_message = system_message
-        self.allowed_transitions = allowed_transitions
 
     def get_llm(self, llm_json_file):
         # Combine path construction and opening with context manager
@@ -35,15 +34,18 @@ class ChatManagerBuilder(BaseChatManager):
         }
 
     def build_chat_manager(self):
+        self._reset_agents()
         groupchat = autogen.GroupChat(
             messages=[],
             max_round=6,
             agents=self._agents,
             send_introductions=True,
-            speaker_transitions_type="allowed",
-            speaker_selection_method="round_robin",
-            allowed_or_disallowed_speaker_transitions=self.allowed_transitions,
+            speaker_selection_method=CHAT.CONSTANTS.SPEAKER_SELECTION_METHOD,
         )
         return autogen.GroupChatManager(
             groupchat=groupchat, llm_config=self.get_llm_config()
         )
+
+    def _reset_agents(self):
+        for agent in self._agents:
+            agent.reset()
