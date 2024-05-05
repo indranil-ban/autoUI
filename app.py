@@ -1,48 +1,27 @@
+from preprocessors import code_to_doc as codoc
+from constants import EMBED
+print("================================================================")
+
+codoc.generate_markdown(EMBED.CONSTANTS.EMBED_CONTEXT_PATH, EMBED.CONSTANTS.EMBED_CONTEXT_OUTPUT_PATH)
+
+
 from agents.user_proxy_agent import user_proxy_agent as user
 from managers.task_manager import TaskManager
 from managers.chat_manager import chat_manager
 from utils import chat_util
-from constants import EMBED
-from preprocessors import code_to_doc as codoc
 from autogen.code_utils import extract_code  # type: ignore
-
-print("================================================================")
-
-codoc.generate_markdown(EMBED.CONSTANTS.EMBED_CONTEXT_PATH)
 
 result = chat_util.init(
     user,
     agents=chat_manager,
     task=TaskManager(
         """
-        Create breadcrumb using gl-breadcrumb component where my items prop is 
-        [
-            {
-                "text": "First item",
-                "href": "#",
-                "avatarPath": "2f644f9f852c9a6703f3.png"
-            },
-            {
-                "text": "Second item",
-                "href": "#"
-            },
-            {
-                "text": "Third item",
-                "href": "#",
-                "avatarPath": "2853f51cf3def4d20cb1.png"
-            },
-            {
-                "text": "Fourth item",
-                "to": {
-                "name": "fourth-item"
-                }
-            }
-        ].
-        Save the javascript code into a file
-                        """
+        create table using gl-table component where items are [{"column_one":"test","col_2":"ABC","col_three":1234},{"column_one":"test2","col_2":"DEF","col_three":5678},{"column_one":"test3","col_2":"GHI","col_three":9101}], fields are 
+        [{"key":"column_one","label":"First column","variant":"secondary","sortable":true,"isRowHeader":false},{"key":"col_2","label":"Second column"},{"key":"col_three","sortable":true,"label":"Third column","thClass":"gl-text-right","tdClass":"gl-text-right"}], selected variant is primary, sort direction is desc and sort by col_three. Keep other props with default value
+        """
     ).get_task(),
     is_rag=True,
-    search="gl-breadcrumb",
+    search="gl-table",
 )
 
 print("================================================================")

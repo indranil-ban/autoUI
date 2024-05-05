@@ -1,6 +1,6 @@
 import os
 from impl.rag_agent_builder import RagAgentBuilder
-from utils import message_util as msgUtil
+from utils import message_util as msgUtil, common_util as comUtil
 from autogen.coding import LocalCommandLineCodeExecutor  # type: ignore
 import tempfile
 from constants import EMBED
@@ -21,5 +21,5 @@ user_proxy_agent = RagAgentBuilder(
     msgUtil.load_text_file(os.path.join("..", "messages", "system", "user.txt")),
     {"executor": executor},
     proxy=True,
-    docs_path=EMBED.CONSTANTS.DOCUMENT_FILE_NAME,
+    docs_path=comUtil.get_filepaths(EMBED.CONSTANTS.EMBED_CONTEXT_OUTPUT_PATH),
 ).build_agent()
