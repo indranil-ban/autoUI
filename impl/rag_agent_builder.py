@@ -1,6 +1,6 @@
 from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistantAgent  # type: ignore
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent # type: ignore
-
+from langchain.text_splitter import RecursiveCharacterTextSplitter # type: ignore
 from impl.agent_builder import AgentBuilder
 from constants import DB, INPUT # type: ignore or
 
@@ -30,6 +30,7 @@ class RagAgentBuilder(AgentBuilder):
             return self.get_assistant_agent()
 
     def get_proxy_agent(self):
+        recur_spliter = RecursiveCharacterTextSplitter(separators=["\n", "\r", "\t"])
         return RetrieveUserProxyAgent(
             name=self._name,
             human_input_mode=INPUT.MODE.HUMAN_INPUT,
@@ -45,7 +46,9 @@ class RagAgentBuilder(AgentBuilder):
                 "client": DB.CONSTANTS.CLIENT,
                 "embedding_model": DB.CONSTANTS.EMBED_MODEL,
                 "collection_name": DB.CONSTANTS.COLLECTION_NAME,
+                "custom_text_split_function": recur_spliter.split_text,
                 "get_or_create": True,
+                "n_results": DB.CONSTANTS.NO_RESULTS
             },
         )
 
