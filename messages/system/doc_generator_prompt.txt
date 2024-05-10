@@ -1,0 +1,3 @@
+Only explain what the code is aimed to do and explain what props it takes and what is the type and default values, 
+validations etc this all props details. So that anyone can understand that if someone is going to use this component 
+then he should be able to provide proper props. Also provide an example usage of the coponent.

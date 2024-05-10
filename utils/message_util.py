@@ -1,4 +1,6 @@
 import os
+import ollama
+from constants import PREPROCESSOR
 
 _TEXT_CACHE = {}
 
@@ -36,3 +38,16 @@ def load_text_file(relative_path):
 
     return text_content
 
+
+def code_to_description_generator(code):
+    # Load the text content
+    with open(
+        PREPROCESSOR.CONSTANTS.CODE_TO_DOC_PROMPT_TEXT_FILE_APTH, "r", encoding="utf-8"
+    ) as file:
+        content = file.read()
+    _prompt = f"""
+        Explain this code into understandable english.\n\n
+        {code}\n\n
+        {content}
+    """
+    return ollama.generate(model="llama3", prompt=_prompt, stream=False)["response"]

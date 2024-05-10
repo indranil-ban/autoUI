@@ -1,5 +1,5 @@
 import os
-
+from utils import message_util as msgUtl 
 
 def generate_markdown(directory_path, output_dir):
     print("Preprocessing markdown file generation...")
@@ -21,9 +21,11 @@ def generate_markdown(directory_path, output_dir):
 
     print("Preprocessing finished.")
 
+
 def read_file(file_path):
-    with open(file_path, "r", encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         return f.read()
+
 
 def get_vue_content(folder_path):
     vue_files = [file for file in os.listdir(folder_path) if file.endswith(".vue")]
@@ -31,15 +33,21 @@ def get_vue_content(folder_path):
         return ""
     vue_file_path = os.path.join(folder_path, vue_files[0])
     code_content = read_file(vue_file_path)
-    return f"### Code of the file:\n```html\n{code_content}\n```\n\n"
+    code_explaination = msgUtl.code_to_description_generator(code_content)
+    # return f"### Code of the file:\n```html\n{code_content}\n```\n\n"
+    return f"### Code explanation:\n{code_explaination}\n\n"
+
 
 def get_stories_content(folder_path):
-    stories_files = [file for file in os.listdir(folder_path) if file.endswith(".stories.js")]
+    stories_files = [
+        file for file in os.listdir(folder_path) if file.endswith(".stories.js")
+    ]
     if not stories_files:
         return "No .stories.js file found in this folder.\n\n"
     stories_file_path = os.path.join(folder_path, stories_files[0])
     code_content = read_file(stories_file_path)
     return f"### Example Usage:\n```javascript\n{code_content}\n```\n\n"
+
 
 def get_md_content(folder_path):
     md_content = ""
@@ -49,6 +57,7 @@ def get_md_content(folder_path):
         md_file_content = read_file(md_file_path)
         md_content += f"### Usage of {md_file}:\n{md_file_content}\n\n"
     return md_content
+
 
 def remove_if_exists(output_dir):
     if os.path.exists(output_dir):
