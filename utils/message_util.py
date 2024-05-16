@@ -31,7 +31,7 @@ def load_text_file(relative_path):
         return _TEXT_CACHE[file_path]
 
     # Load the text content
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         text_content = file.read()
 
     _TEXT_CACHE[file_path] = text_content
@@ -45,9 +45,13 @@ def code_to_description_generator(code):
         PREPROCESSOR.CONSTANTS.CODE_TO_DOC_PROMPT_TEXT_FILE_APTH, "r", encoding="utf-8"
     ) as file:
         content = file.read()
-    _prompt = f"""
+    _content = f"""
         Explain this code into understandable english.\n\n
         {code}\n\n
         {content}
     """
-    return ollama.generate(model="llama3", prompt=_prompt, stream=False)["response"]
+    return ollama.chat(
+        model="llama3",
+        messages=[{"role": "assistant", "content": _content}],
+        stream=False,
+    )["message"]["content"]
